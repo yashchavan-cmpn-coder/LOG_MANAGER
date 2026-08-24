@@ -1,6 +1,6 @@
 Django==6.1
 numpy
 pandas
-google-generativeai
+google-genai
 python-dotenv
 gunicorn
