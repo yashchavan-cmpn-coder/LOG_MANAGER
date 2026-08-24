@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Anomaly Details</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+        }
+
+
+        /* ==============================
+           NAVBAR
+        ============================== */
+
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 18px 30px;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+
+        /* ==============================
+           CONTAINER
+        ============================== */
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+
+        /* ==============================
+           BACK BUTTON
+        ============================== */
+
+        .back {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            color: #2563eb;
+        }
+
+
+        /* ==============================
+           HEADER
+        ============================== */
+
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .header h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .score {
+            display: inline-block;
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+
+        /* ==============================
+           SECTIONS
+        ============================== */
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .section h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 12px;
+        }
+
+
+        /* ==============================
+           LOG DETAILS
+        ============================== */
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .detail {
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+
+        .label {
+            display: block;
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            font-weight: 500;
+        }
+
+
+        /* ==============================
+           DETECTION REASON
+        ============================== */
+
+        .reason {
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            padding: 15px;
+            line-height: 1.6;
+        }
+
+
+        /* ==============================
+           AI SECTION
+        ============================== */
+
+        .ai-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .ai-header h3 {
+            margin: 0;
+            border: none;
+            padding: 0;
+        }
+
+
+        /* ==============================
+           GENERATE AI BUTTON
+        ============================== */
+
+        .generate-ai-btn {
+
+            display: inline-block;
+
+            background: #2563eb;
+
+            color: white;
+
+            text-decoration: none;
+
+            padding: 10px 16px;
+
+            border-radius: 7px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            transition: 0.2s;
+
+        }
+
+        .generate-ai-btn:hover {
+
+            background: #1d4ed8;
+
+            transform: translateY(-1px);
+
+        }
+
+
+        /* ==============================
+           AI GENERATED STATUS
+        ============================== */
+
+        .ai-generated {
+
+            display: inline-block;
+
+            background: #dcfce7;
+
+            color: #166534;
+
+            padding: 8px 12px;
+
+            border-radius: 6px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+        }
+
+
+        /* ==============================
+           AI BOX
+        ============================== */
+
+        .ai-box {
+            background: #f9fafb;
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .ai-box h4 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .ai-box p {
+            margin-bottom: 0;
+            line-height: 1.7;
+        }
+
+
+        /* ==============================
+           AI BOX TYPES
+        ============================== */
+
+        .explanation {
+            border-left: 4px solid #2563eb;
+        }
+
+        .root-cause {
+            border-left: 4px solid #7c3aed;
+        }
+
+        .action {
+            border-left: 4px solid #16a34a;
+        }
+
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        @media (max-width: 700px) {
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+            .ai-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==============================
+     NAVBAR
+============================== -->
+
+<nav class="navbar">
+
+    <h1>
+        Smart Log Analyzer
+    </h1>
+
+</nav>
+
+
+<div class="container">
+
+
+    <!-- ==============================
+         BACK
+    ============================== -->
+
+    <a
+        class="back"
+        href="{% url 'logs:dashboard' %}"
+    >
+        ← Back to Dashboard
+    </a>
+
+
+    <!-- ==============================
+         HEADER
+    ============================== -->
+
+    <div class="header">
+
+        <h2>
+            Anomaly Detected
+        </h2>
+
+        <span class="score">
+            Anomaly Score: {{ anomaly.score }}
+        </span>
+
+    </div>
+
+
+    <!-- ==============================
+         LOG INFORMATION
+    ============================== -->
+
+    <div class="section">
+
+        <h3>
+            Log Information
+        </h3>
+
+        <div class="details">
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Timestamp
+                </span>
+
+                <span class="value">
+                    {{ anomaly.log.timestamp|date:"Y-m-d H:i:s" }}
+                </span>
+
+            </div>
+
+
+            <div class="detail">
+
+                <span class="label">
+                    IP Address
+                </span>
+
+                <span class="value">
+                    {{ anomaly.log.ip_address }}
+                </span>
+
+            </div>
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Event Type
+                </span>
+
+                <span class="value">
+                    {{ anomaly.log.event_type }}
+                </span>
+
+            </div>
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Severity
+                </span>
+
+                <span class="value">
+                    {{ anomaly.log.severity }}
+                </span>
+
+            </div>
+
+
+            <div class="detail">
+
+                <span class="label">
+                    HTTP Status
+                </span>
+
+                <span class="value">
+                    {{ anomaly.log.status_code }}
+                </span>
+
+            </div>
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Response Time
+                </span>
+
+                <span class="value">
+                    {{ anomaly.log.response_time|floatformat:2 }} ms
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- ==============================
+         ORIGINAL LOG MESSAGE
+    ============================== -->
+
+    <div class="section">
+
+        <h3>
+            Log Message
+        </h3>
+
+        <div class="reason">
+
+            {{ anomaly.log.message }}
+
+        </div>
+
+    </div>
+
+
+    <!-- ==============================
+         DETECTION REASON
+    ============================== -->
+
+    <div class="section">
+
+        <h3>
+            Why Was This Flagged?
+        </h3>
+
+        <div class="reason">
+
+            {{ anomaly.reason }}
+
+        </div>
+
+    </div>
+
+
+    <!-- ==============================
+         AI ANALYSIS
+    ============================== -->
+
+    <div class="section">
+
+
+        <div class="ai-header">
+
+            <h3>
+                AI Analysis
+            </h3>
+
+
+            {% if not anomaly.ai_explanation %}
+
+                <a
+                    href="{% url 'logs:generate_ai_analysis' anomaly.id %}"
+                    class="generate-ai-btn"
+                >
+                    🤖 Generate AI Analysis
+                </a>
+
+            {% else %}
+
+                <div class="ai-generated">
+                    ✓ AI analysis generated
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- ==============================
+             EXPLANATION
+        ============================== -->
+
+        <div class="ai-box explanation">
+
+            <h4>
+                Plain-English Explanation
+            </h4>
+
+            <p>
+
+                {% if anomaly.ai_explanation %}
+
+                    {{ anomaly.ai_explanation }}
+
+                {% else %}
+
+                    AI explanation has not been generated yet.
+
+                    Click
+                    <strong>
+                        "Generate AI Analysis"
+                    </strong>
+                    to analyze this anomaly.
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+        <!-- ==============================
+             ROOT CAUSE
+        ============================== -->
+
+        <div class="ai-box root-cause">
+
+            <h4>
+                Likely Root Cause
+            </h4>
+
+            <p>
+
+                {% if anomaly.root_cause %}
+
+                    {{ anomaly.root_cause }}
+
+                {% else %}
+
+                    Root cause analysis has not been generated yet.
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+        <!-- ==============================
+             RECOMMENDED ACTION
+        ============================== -->
+
+        <div class="ai-box action">
+
+            <h4>
+                Recommended Next Step
+            </h4>
+
+            <p>
+
+                {% if anomaly.recommended_action %}
+
+                    {{ anomaly.recommended_action }}
+
+                {% else %}
+
+                    Recommended action has not been generated yet.
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
